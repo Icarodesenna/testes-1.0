@@ -1,6 +1,6 @@
 -- CONFIGURAÇÕES DE SEGURANÇA
-local allowedUserId = 6026315852 -- Substitua com seu UserId real
-local senhaCorreta = "12345" -- Senha que você definirá
+local allowedUserId = 2412525577 -- Substitua com seu UserId real
+local senhaCorreta = "27032011" -- Senha que você definirá
 local dataExpiracao = "2025-05-02 23:59:00" -- Formato: AAAA-MM-DD HH:MM:SS
 
 local Players = game:GetService("Players")
