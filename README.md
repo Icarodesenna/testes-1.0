@@ -166,6 +166,18 @@ flyBtn.MouseButton1Click:Connect(function()
 end)
 flyBtn.Parent = scroll
 
+-- ProximityPrompt sem tempo
+for _, p in pairs(game:GetDescendants()) do
+	if p:IsA("ProximityPrompt") then
+		p.HoldDuration = 0
+	end
+end
+game.DescendantAdded:Connect(function(d)
+	if d:IsA("ProximityPrompt") then
+		d.HoldDuration = 0
+	end
+end)
+
 -- ========== BOTÃO SPAM ABILITY EVENT ==========
 local remote = game:GetService("ReplicatedStorage"):FindFirstChild("AbilityEvent") -- Troque o nome se necessário!
 local spamBtn = createButton("SPAM [OFF]")
