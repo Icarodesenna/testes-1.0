@@ -189,6 +189,8 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
+-- Speed local speedEnabled = false local speedValue = 50 local speedBtn = createButton("Speed: OFF") speedBtn.Parent = scroll speedBtn.MouseButton1Click:Connect(function() speedEnabled = not speedEnabled speedBtn.Text = "Speed: " .. (speedEnabled and "ON" or "OFF") end) local speedBox = Instance.new("TextBox") speedBox.Size = UDim2.new(1, -10, 0, 30) speedBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60) speedBox.TextColor3 = Color3.new(1, 1, 1) speedBox.Font = Enum.Font.SourceSansBold speedBox.TextSize = 14 speedBox.Text = tostring(speedValue) speedBox.ClearTextOnFocus = false speedBox.PlaceholderText = "Velocidade" speedBox.Parent = scroll speedBox.FocusLost:Connect(function() local val = tonumber(speedBox.Text) if val then speedValue = val end end) RunService.Stepped:Connect(function() if speedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = speedValue elseif LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 16 end end)
+
 -- Noclip
 local noclip = false
 local noclipBtn = createButton("Noclip: OFF")
