@@ -1,23 +1,15 @@
---[[ PAINEL DEBUG UNIVERSAL DE ROBLOX Inclui:
+--[[ Painel Debug Universal de Roblox - Botão SPAM Separado
+by.icarodesenna
+]]
 
-Tela de perfil inicial: mostra nome e foto do jogador, botão para abrir painel
-Painel móvel para PC e celular
-Botão para abrir/fechar painel
-TP Point alternado: teleporta entre duas coordenadas a cada 5 segundos, ativado/desativado no botão TP Point
-ESP com distância
-Infinite Jump
-Noclip
-Auto Coletar Moedas
-Speed com controle
-WalkFling
-Fly
-Lista de jogadores para teleporte (botão "Mostrar Jogadores" fixo, abre/fecha a lista)
-Botão de SPAM AbilityEvent
-by.icarodesenna --]]
-local Players = game:GetService("Players") local RunService = game:GetService("RunService") local UIS = game:GetService("UserInputService") local LocalPlayer = Players.LocalPlayer
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
 
 -- Tela de Perfil Inicial
-local gui = Instance.new("ScreenGui", game.CoreGui) gui.Name = "DebugGuiPerfil"
+local gui = Instance.new("ScreenGui", game.CoreGui)
+gui.Name = "DebugGuiPerfil"
 local perfilFrame = Instance.new("Frame", gui)
 perfilFrame.Position = UDim2.new(0.5, -125, 0.5, -100)
 perfilFrame.Size = UDim2.new(0, 250, 0, 180)
@@ -25,20 +17,29 @@ perfilFrame.BackgroundColor3 = Color3.fromRGB(40,40,40)
 perfilFrame.BorderSizePixel = 0
 
 local avatar = Instance.new("ImageLabel", perfilFrame)
-avatar.Size = UDim2.new(0, 80, 0, 80) avatar.Position = UDim2.new(0, 20, 0, 20)
+avatar.Size = UDim2.new(0, 80, 0, 80)
+avatar.Position = UDim2.new(0, 20, 0, 20)
 avatar.BackgroundTransparency = 1
 avatar.Image = "https://www.roblox.com/headshot-thumbnail/image?userId="..LocalPlayer.UserId.."&width=180&height=180&format=png"
 
 local nomeLabel = Instance.new("TextLabel", perfilFrame)
-nomeLabel.Size = UDim2.new(0, 120, 0, 40) nomeLabel.Position = UDim2.new(0, 110, 0, 40)
-nomeLabel.BackgroundTransparency = 1 nomeLabel.Text = LocalPlayer.Name
-nomeLabel.TextColor3 = Color3.new(1,1,1) nomeLabel.Font = Enum.Font.SourceSansBold
-nomeLabel.TextSize = 22 nomeLabel.TextXAlignment = Enum.TextXAlignment.Left
+nomeLabel.Size = UDim2.new(0, 120, 0, 40)
+nomeLabel.Position = UDim2.new(0, 110, 0, 40)
+nomeLabel.BackgroundTransparency = 1
+nomeLabel.Text = LocalPlayer.Name
+nomeLabel.TextColor3 = Color3.new(1,1,1)
+nomeLabel.Font = Enum.Font.SourceSansBold
+nomeLabel.TextSize = 22
+nomeLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local abrirBtn = Instance.new("TextButton", perfilFrame)
-abrirBtn.Size = UDim2.new(0, 200, 0, 36) abrirBtn.Position = UDim2.new(0.5, -100, 1, -50)
-abrirBtn.BackgroundColor3 = Color3.fromRGB(70,130,180) abrirBtn.TextColor3 = Color3.new(1,1,1)
-abrirBtn.Font = Enum.Font.SourceSansBold abrirBtn.Text = "Abrir Painel" abrirBtn.TextSize = 20
+abrirBtn.Size = UDim2.new(0, 200, 0, 36)
+abrirBtn.Position = UDim2.new(0.5, -100, 1, -50)
+abrirBtn.BackgroundColor3 = Color3.fromRGB(70,130,180)
+abrirBtn.TextColor3 = Color3.new(1,1,1)
+abrirBtn.Font = Enum.Font.SourceSansBold
+abrirBtn.Text = "Abrir Painel"
+abrirBtn.TextSize = 20
 
 -- Painel principal (inicialmente oculto)
 local mainFrame = Instance.new("Frame", gui)
@@ -52,11 +53,16 @@ local toggleGuiBtn = Instance.new("TextButton", gui)
 toggleGuiBtn.Position = UDim2.new(0, 10, 0, 10)
 toggleGuiBtn.Size = UDim2.new(0, 120, 0, 30)
 toggleGuiBtn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-toggleGuiBtn.Text = "Fechar Painel" toggleGuiBtn.TextColor3 = Color3.new(1,1,1)
-toggleGuiBtn.Font = Enum.Font.SourceSansBold toggleGuiBtn.TextSize = 14 toggleGuiBtn.Visible = false
+toggleGuiBtn.Text = "Fechar Painel"
+toggleGuiBtn.TextColor3 = Color3.new(1,1,1)
+toggleGuiBtn.Font = Enum.Font.SourceSansBold
+toggleGuiBtn.TextSize = 14
+toggleGuiBtn.Visible = false
 
 abrirBtn.MouseButton1Click:Connect(function()
-    perfilFrame.Visible = false mainFrame.Visible = true toggleGuiBtn.Visible = true
+    perfilFrame.Visible = false
+    mainFrame.Visible = true
+    toggleGuiBtn.Visible = true
 end)
 toggleGuiBtn.MouseButton1Click:Connect(function()
     mainFrame.Visible = not mainFrame.Visible
@@ -64,24 +70,36 @@ toggleGuiBtn.MouseButton1Click:Connect(function()
 end)
 
 -- Mover painel (PC e celular)
-local dragging = false local dragStart, startPos
+local dragging = false
+local dragStart, startPos
 local function update(input)
     local delta = input.Position - dragStart
     local newPos = startPos + UDim2.new(0, delta.X, 0, delta.Y)
-    mainFrame.Position = newPos toggleGuiBtn.Position = UDim2.new(newPos.X.Scale, newPos.X.Offset, newPos.Y.Scale, newPos.Y.Offset)
+    mainFrame.Position = newPos
+    toggleGuiBtn.Position = UDim2.new(newPos.X.Scale, newPos.X.Offset, newPos.Y.Scale, newPos.Y.Offset)
 end
 local function dragBegin(input)
     if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true dragStart = input.Position startPos = mainFrame.Position
-        input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
     end
 end
 toggleGuiBtn.InputBegan:Connect(dragBegin)
 toggleGuiBtn.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then update(input) end
+    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        update(input)
+    end
 end)
 UIS.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then update(input) end
+    if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        update(input)
+    end
 end)
 
 -- Criador de botões
@@ -90,8 +108,10 @@ local function createButton(text)
     btn.Size = UDim2.new(1, -10, 0, 30)
     btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     btn.TextColor3 = Color3.new(1,1,1)
-    btn.Font = Enum.Font.SourceSansBold btn.TextSize = 14
-    btn.Text = text btn.TextWrapped = true
+    btn.Font = Enum.Font.SourceSansBold
+    btn.TextSize = 14
+    btn.Text = text
+    btn.TextWrapped = true
     btn.TextXAlignment = Enum.TextXAlignment.Center
     btn.Position = UDim2.new(0, 5, 0, 0)
     return btn
@@ -101,39 +121,64 @@ local scroll = Instance.new("ScrollingFrame", mainFrame)
 scroll.Position = UDim2.new(0, 0, 0, 0)
 scroll.Size = UDim2.new(1, 0, 1, 0)
 scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-scroll.ScrollBarThickness = 6 scroll.BackgroundTransparency = 1
+scroll.ScrollBarThickness = 6
+scroll.BackgroundTransparency = 1
 
 local layout = Instance.new("UIListLayout", scroll)
-layout.Padding = UDim.new(0, 4) layout.SortOrder = Enum.SortOrder.LayoutOrder
+layout.Padding = UDim.new(0, 4)
+layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- ESP
-local espOn = false local espObjects = {}
-local espBtn = createButton("ESP: OFF") espBtn.Parent = scroll
-local function clearESP() for _, v in pairs(espObjects) do if v and v.Parent then v:Destroy() end end espObjects = {} end
+local espOn = false
+local espObjects = {}
+local espBtn = createButton("ESP: OFF")
+espBtn.Parent = scroll
+local function clearESP()
+    for _, v in pairs(espObjects) do
+        if v and v.Parent then v:Destroy() end
+    end
+    espObjects = {}
+end
 local function addESP(p)
     if p == LocalPlayer then return end
     local bb = Instance.new("BillboardGui")
-    bb.Size = UDim2.new(0, 200, 0, 50) bb.AlwaysOnTop = true
+    bb.Size = UDim2.new(0, 200, 0, 50)
+    bb.AlwaysOnTop = true
     local lbl = Instance.new("TextLabel", bb)
-    lbl.Size = UDim2.new(1,0,1,0) lbl.BackgroundTransparency = 1 lbl.TextColor3 = Color3.new(1,1,1)
-    lbl.TextStrokeTransparency = 0 lbl.Font = Enum.Font.SourceSansBold lbl.TextScaled = true lbl.Text = p.Name
+    lbl.Size = UDim2.new(1,0,1,0)
+    lbl.BackgroundTransparency = 1
+    lbl.TextColor3 = Color3.new(1,1,1)
+    lbl.TextStrokeTransparency = 0
+    lbl.Font = Enum.Font.SourceSansBold
+    lbl.TextScaled = true
+    lbl.Text = p.Name
     local function update()
         if p.Character and p.Character:FindFirstChild("Head") and p.Character:FindFirstChild("HumanoidRootPart") then
             local dist = (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and (p.Character.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude) or 0
             lbl.Text = string.format("%s (%.0fm)", p.Name, dist)
-            bb.Adornee = p.Character.Head bb.Parent = p.Character.Head
+            bb.Adornee = p.Character.Head
+            bb.Parent = p.Character.Head
         end
     end
-    update() RunService.RenderStepped:Connect(update) table.insert(espObjects, bb)
+    update()
+    RunService.RenderStepped:Connect(update)
+    table.insert(espObjects, bb)
 end
 espBtn.MouseButton1Click:Connect(function()
-    espOn = not espOn espBtn.Text = "ESP: " .. (espOn and "ON" or "OFF")
-    clearESP() if espOn then for _, p in pairs(Players:GetPlayers()) do addESP(p) end end
+    espOn = not espOn
+    espBtn.Text = "ESP: " .. (espOn and "ON" or "OFF")
+    clearESP()
+    if espOn then
+        for _, p in pairs(Players:GetPlayers()) do
+            addESP(p)
+        end
+    end
 end)
 
 -- Infinite Jump
 local infJump = false
-local infJumpBtn = createButton("Infinite Jump: OFF") infJumpBtn.Parent = scroll
+local infJumpBtn = createButton("Infinite Jump: OFF")
+infJumpBtn.Parent = scroll
 infJumpBtn.MouseButton1Click:Connect(function()
     infJump = not infJump
     infJumpBtn.Text = "Infinite Jump: " .. (infJump and "ON" or "OFF")
@@ -146,7 +191,8 @@ end)
 
 -- Noclip
 local noclip = false
-local noclipBtn = createButton("Noclip: OFF") noclipBtn.Parent = scroll
+local noclipBtn = createButton("Noclip: OFF")
+noclipBtn.Parent = scroll
 noclipBtn.MouseButton1Click:Connect(function()
     noclip = not noclip
     noclipBtn.Text = "Noclip: " .. (noclip and "ON" or "OFF")
@@ -168,42 +214,136 @@ flyBtn.Parent = scroll
 
 -- ProximityPrompt sem tempo
 for _, p in pairs(game:GetDescendants()) do
-	if p:IsA("ProximityPrompt") then
-		p.HoldDuration = 0
-	end
+    if p:IsA("ProximityPrompt") then
+        p.HoldDuration = 0
+    end
 end
 game.DescendantAdded:Connect(function(d)
-	if d:IsA("ProximityPrompt") then
-		d.HoldDuration = 0
-	end
+    if d:IsA("ProximityPrompt") then
+        d.HoldDuration = 0
+    end
 end)
 
--- ========== BOTÃO SPAM ABILITY EVENT ==========
+-- ========== BOTÃO SPAM ABILITY EVENT SEPARADO ==========
 local remote = game:GetService("ReplicatedStorage"):FindFirstChild("AbilityEvent") -- Troque o nome se necessário!
-local spamBtn = createButton("SPAM [OFF]")
+local spamBtn = createButton("Abrir SPAM")
 spamBtn.Parent = scroll
-local abilCon -- conexão do spam
 
-spamBtn.MouseButton1Click:Connect(function()
+-- Modal Spam
+local spamModal = Instance.new("Frame", gui)
+spamModal.Size = UDim2.new(0, 200, 0, 120)
+spamModal.Position = UDim2.new(0.5, -100, 0.5, -60)
+spamModal.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+spamModal.Visible = false
+spamModal.Active = true
+
+local spamTitle = Instance.new("TextLabel", spamModal)
+spamTitle.Size = UDim2.new(1, 0, 0, 36)
+spamTitle.Position = UDim2.new(0, 0, 0, 0)
+spamTitle.BackgroundTransparency = 1
+spamTitle.Text = "SPAM AbilityEvent"
+spamTitle.TextColor3 = Color3.fromRGB(255, 235, 78)
+spamTitle.Font = Enum.Font.SourceSansBold
+spamTitle.TextSize = 18
+
+local spamToggleBtn = createButton("SPAM OFF")
+spamToggleBtn.Size = UDim2.new(1, -20, 0, 40)
+spamToggleBtn.Position = UDim2.new(0, 10, 0, 46)
+spamToggleBtn.Parent = spamModal
+
+local closeSpamBtn = createButton("Fechar")
+closeSpamBtn.Size = UDim2.new(1, -20, 0, 30)
+closeSpamBtn.Position = UDim2.new(0, 10, 1, -40)
+closeSpamBtn.Parent = spamModal
+
+local abilCon
+spamToggleBtn.MouseButton1Click:Connect(function()
     if not abilCon then
-        spamBtn.Text = "SPAM ON"
-        abilCon = game:GetService("RunService").RenderStepped:Connect(function()
+        spamToggleBtn.Text = "SPAM ON"
+        abilCon = RunService.RenderStepped:Connect(function()
             if remote then
-                remote:FireServer(1) -- Troque o argumento se necessário (alguns remotes não precisam)
+                remote:FireServer(1) -- Troque o argumento se necessário
             end
         end)
     else
-        spamBtn.Text = "SPAM OFF"
+        spamToggleBtn.Text = "SPAM OFF"
         abilCon:Disconnect()
         abilCon = nil
     end
 end)
 
+spamBtn.MouseButton1Click:Connect(function()
+    spamModal.Visible = true
+end)
+closeSpamBtn.MouseButton1Click:Connect(function()
+    spamModal.Visible = false
+    if abilCon then
+        abilCon:Disconnect()
+        abilCon = nil
+        spamToggleBtn.Text = "SPAM OFF"
+    end
+end)
+
+-- Fechar modal ao clicar fora
+UIS.InputBegan:Connect(function(input, gp)
+    if spamModal.Visible and input.UserInputType == Enum.UserInputType.MouseButton1 then
+        local mouse = UIS:GetMouseLocation()
+        local x, y = mouse.X, mouse.Y
+        local absPos = spamModal.AbsolutePosition
+        local absSize = spamModal.AbsoluteSize
+        if not (x > absPos.X and x < absPos.X + absSize.X and y > absPos.Y and y < absPos.Y + absSize.Y) then
+            spamModal.Visible = false
+            if abilCon then
+                abilCon:Disconnect()
+                abilCon = nil
+                spamToggleBtn.Text = "SPAM OFF"
+            end
+        end
+    end
+end)
+
+-- === MOVIMENTAÇÃO LIVRE DO SPAM MODAL ===
+local spamDragging = false
+local spamDragStart, spamStartPos
+
+local function spamUpdate(input)
+    local delta = input.Position - spamDragStart
+    local newPos = spamStartPos + UDim2.new(0, delta.X, 0, delta.Y)
+    spamModal.Position = newPos
+end
+
+local function spamDragBegin(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        spamDragging = true
+        spamDragStart = input.Position
+        spamStartPos = spamModal.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                spamDragging = false
+            end
+        end)
+    end
+end
+
+spamModal.InputBegan:Connect(spamDragBegin)
+spamModal.InputChanged:Connect(function(input)
+    if spamDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        spamUpdate(input)
+    end
+end)
+UIS.InputChanged:Connect(function(input)
+    if spamDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+        spamUpdate(input)
+    end
+end)
+
 -- Lista de Jogadores para TP (toggle)
-local tpBtn = createButton("Mostrar Jogadores") tpBtn.Name = "MostrarJogadoresBtn" tpBtn.Parent = scroll
+local tpBtn = createButton("Mostrar Jogadores")
+tpBtn.Name = "MostrarJogadoresBtn"
+tpBtn.Parent = scroll
 local function limparBotoesJogadores()
     for _, c in pairs(scroll:GetChildren()) do
-        if c:IsA("TextButton") and c.Name ~= "MostrarJogadoresBtn" and c ~= tpPointBtn and c ~= espBtn and c ~= infJumpBtn and c ~= noclipBtn and c ~= collectBtn and c ~= speedBtn and c ~= walkflingBtn and c ~= flyBtn and c ~= spamBtn then
+        if c:IsA("TextButton") and c.Name ~= "MostrarJogadoresBtn" and c ~= tpBtn and c ~= espBtn and c ~= infJumpBtn and c ~= noclipBtn and c ~= flyBtn and c ~= spamBtn then
             c:Destroy()
         end
     end
@@ -211,7 +351,9 @@ end
 local listaAberta = false
 tpBtn.MouseButton1Click:Connect(function()
     if listaAberta then
-        limparBotoesJogadores() listaAberta = false tpBtn.Text = "Mostrar Jogadores"
+        limparBotoesJogadores()
+        listaAberta = false
+        tpBtn.Text = "Mostrar Jogadores"
     else
         limparBotoesJogadores()
         for _, p in pairs(Players:GetPlayers()) do
@@ -228,7 +370,8 @@ tpBtn.MouseButton1Click:Connect(function()
                 playerBtn.Parent = scroll
             end
         end
-        listaAberta = true tpBtn.Text = "Fechar Jogadores"
+        listaAberta = true
+        tpBtn.Text = "Fechar Jogadores"
     end
 end)
 
@@ -237,8 +380,11 @@ local assinatura = Instance.new("TextLabel")
 assinatura.Size = UDim2.new(1, -10, 0, 20)
 assinatura.BackgroundTransparency = 1
 assinatura.TextColor3 = Color3.fromRGB(200, 200, 200)
-assinatura.Font = Enum.Font.SourceSansItalic assinatura.TextSize = 14
-assinatura.Text = "by.icarodesenna" assinatura.TextXAlignment = Enum.TextXAlignment.Center assinatura.Parent = scroll
+assinatura.Font = Enum.Font.SourceSansItalic
+assinatura.TextSize = 14
+assinatura.Text = "by.icarodesenna"
+assinatura.TextXAlignment = Enum.TextXAlignment.Center
+assinatura.Parent = scroll
 
 RunService.RenderStepped:Connect(function()
     scroll.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 10)
