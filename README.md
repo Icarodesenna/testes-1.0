@@ -189,8 +189,6 @@ UIS.JumpRequest:Connect(function()
     end
 end)
 
--- Speed local speedEnabled = false local speedValue = 50 local speedBtn = createButton("Speed: OFF") speedBtn.Parent = scroll speedBtn.MouseButton1Click:Connect(function() speedEnabled = not speedEnabled speedBtn.Text = "Speed: " .. (speedEnabled and "ON" or "OFF") end) local speedBox = Instance.new("TextBox") speedBox.Size = UDim2.new(1, -10, 0, 30) speedBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60) speedBox.TextColor3 = Color3.new(1, 1, 1) speedBox.Font = Enum.Font.SourceSansBold speedBox.TextSize = 14 speedBox.Text = tostring(speedValue) speedBox.ClearTextOnFocus = false speedBox.PlaceholderText = "Velocidade" speedBox.Parent = scroll speedBox.FocusLost:Connect(function() local val = tonumber(speedBox.Text) if val then speedValue = val end end) RunService.Stepped:Connect(function() if speedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = speedValue elseif LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 16 end end)
-
 -- Noclip
 local noclip = false
 local noclipBtn = createButton("Noclip: OFF")
@@ -376,6 +374,63 @@ tpBtn.MouseButton1Click:Connect(function()
         tpBtn.Text = "Fechar Jogadores"
     end
 end)
+
+-- === SPEED CONTROL ===
+local speedAtivo = false
+local speedValor = 32 -- valor padrão de velocidade
+local humanoidCon
+local speedFrame = Instance.new("Frame", scroll)
+speedFrame.Size = UDim2.new(1, -10, 0, 36)
+speedFrame.BackgroundTransparency = 1
+speedFrame.LayoutOrder = 99999
+
+local speedBox = Instance.new("TextBox", speedFrame)
+speedBox.Size = UDim2.new(0.5, -5, 1, 0)
+speedBox.Position = UDim2.new(0, 0, 0, 0)
+speedBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+speedBox.TextColor3 = Color3.new(1,1,1)
+speedBox.Font = Enum.Font.SourceSansBold
+speedBox.TextSize = 14
+speedBox.Text = tostring(speedValor)
+speedBox.PlaceholderText = "Velocidade"
+
+local speedBtn = Instance.new("TextButton", speedFrame)
+speedBtn.Size = UDim2.new(0.5, -5, 1, 0)
+speedBtn.Position = UDim2.new(0.5, 5, 0, 0)
+speedBtn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+speedBtn.TextColor3 = Color3.new(1,1,1)
+speedBtn.Font = Enum.Font.SourceSansBold
+speedBtn.TextSize = 14
+speedBtn.Text = "Speed: OFF"
+
+speedBtn.MouseButton1Click:Connect(function()
+    speedAtivo = not speedAtivo
+    speedBtn.Text = "Speed: " .. (speedAtivo and "ON" or "OFF")
+    if humanoidCon then humanoidCon:Disconnect() humanoidCon = nil end
+    if speedAtivo then
+        speedValor = tonumber(speedBox.Text) or 32
+        humanoidCon = RunService.Stepped:Connect(function()
+            local char = LocalPlayer.Character
+            if char and char:FindFirstChildOfClass("Humanoid") then
+                char:FindFirstChildOfClass("Humanoid").WalkSpeed = speedValor
+            end
+        end)
+    else
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChildOfClass("Humanoid") then
+            char:FindFirstChildOfClass("Humanoid").WalkSpeed = 16
+        end
+    end
+end)
+
+speedBox.FocusLost:Connect(function()
+    speedValor = tonumber(speedBox.Text) or 32
+    if speedAtivo and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = speedValor
+    end
+end)
+
+speedFrame.Parent = scroll
 
 -- ProximityPrompt sem tempo
 for _, p in pairs(game:GetDescendants()) do
