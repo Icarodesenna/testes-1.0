@@ -377,6 +377,18 @@ tpBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+-- ProximityPrompt sem tempo
+for _, p in pairs(game:GetDescendants()) do
+	if p:IsA("ProximityPrompt") then
+		p.HoldDuration = 0
+	end
+end
+game.DescendantAdded:Connect(function(d)
+	if d:IsA("ProximityPrompt") then
+		d.HoldDuration = 0
+	end
+end)
+
 -- Assinatura
 local assinatura = Instance.new("TextLabel")
 assinatura.Size = UDim2.new(1, -10, 0, 20)
