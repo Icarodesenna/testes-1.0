@@ -131,30 +131,6 @@ espBtn.MouseButton1Click:Connect(function()
     clearESP() if espOn then for _, p in pairs(Players:GetPlayers()) do addESP(p) end end
 end)
 
--- TP Point alternando loop
-local tpPointAtivo = false
-local tpPointBtn = createButton("TP Point: OFF") tpPointBtn.Parent = scroll
-
-local coord1 = Vector3.new(13.955657, 64.454094, -405.709747)
-local coord2 = Vector3.new(37.9, 67.5, -526.5)
-task.spawn(function()
-    local atual = 1
-    while true do
-        if tpPointAtivo and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            if atual == 1 then
-                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coord1) atual = 2
-            else
-                LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(coord2) atual = 1
-            end
-        end
-        task.wait(5)
-    end
-end)
-tpPointBtn.MouseButton1Click:Connect(function()
-    tpPointAtivo = not tpPointAtivo
-    tpPointBtn.Text = "TP Point: " .. (tpPointAtivo and "ON" or "OFF")
-end)
-
 -- Infinite Jump
 local infJump = false
 local infJumpBtn = createButton("Infinite Jump: OFF") infJumpBtn.Parent = scroll
@@ -180,66 +156,6 @@ RunService.Stepped:Connect(function()
         for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
             if part:IsA("BasePart") then part.CanCollide = false end
         end
-    end
-end)
-
--- Auto Coletar Moedas
-local autoCollect = false
-local collectBtn = createButton("Auto Coletar Moedas: OFF") collectBtn.Parent = scroll
-collectBtn.MouseButton1Click:Connect(function()
-    autoCollect = not autoCollect
-    collectBtn.Text = "Auto Coletar Moedas: " .. (autoCollect and "ON" or "OFF")
-end)
-task.spawn(function()
-    while true do task.wait(0.5)
-        if autoCollect and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            for _, coin in pairs(workspace:GetDescendants()) do
-                if coin:IsA("BasePart") and coin.Name:lower():find("coin") then
-                    LocalPlayer.Character.HumanoidRootPart.CFrame = coin.CFrame + Vector3.new(0, 2, 0)
-                    task.wait(0.2)
-                end
-            end
-        end
-    end
-end)
-
--- Speed
-local speedEnabled = false
-local speedValue = 50
-local speedBtn = createButton("Speed: OFF") speedBtn.Parent = scroll
-speedBtn.MouseButton1Click:Connect(function()
-    speedEnabled = not speedEnabled
-    speedBtn.Text = "Speed: " .. (speedEnabled and "ON" or "OFF")
-end)
-local speedBox = Instance.new("TextBox")
-speedBox.Size = UDim2.new(1, -10, 0, 30)
-speedBox.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-speedBox.TextColor3 = Color3.new(1, 1, 1)
-speedBox.Font = Enum.Font.SourceSansBold
-speedBox.TextSize = 14 speedBox.Text = tostring(speedValue)
-speedBox.ClearTextOnFocus = false
-speedBox.PlaceholderText = "Velocidade"
-speedBox.Parent = scroll
-speedBox.FocusLost:Connect(function()
-    local val = tonumber(speedBox.Text)
-    if val then speedValue = val end
-end)
-RunService.Stepped:Connect(function()
-    if speedEnabled and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = speedValue
-    elseif LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = 16
-    end
-end)
-
--- WalkFling
-local walkflingAtivo = false
-local walkflingBtn = createButton("WalkFling: OFF") walkflingBtn.Parent = scroll
-walkflingBtn.MouseButton1Click:Connect(function()
-    walkflingAtivo = not walkflingAtivo
-    walkflingBtn.Text = "WalkFling: " .. (walkflingAtivo and "ON" or "OFF")
-    if walkflingAtivo then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/0Ben1/fe/main/obf_rf6iQURzu1fqrytcnLBAvW34C9N55kS9g9G3CKz086rC47M6632sEd4ZZYB0AYgV.lua.txt"))()
     end
 end)
 
