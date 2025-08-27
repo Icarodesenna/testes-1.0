@@ -129,7 +129,7 @@ layout.Padding = UDim.new(0, 4)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- ESP
-        repeat task.wait() until v.Character and v.Character:FindFirstChild("HumanoidRootPart")
+repeat task.wait() until v.Character and v.Character:FindFirstChild("HumanoidRootPart")
         local vHolder = Holder:FindFirstChild(v.Name)
         if not vHolder then
             vHolder = Instance.new("Folder", Holder)
