@@ -129,51 +129,54 @@ layout.Padding = UDim.new(0, 4)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- ESP
-local espOn = false
-local espObjects = {}
-local espBtn = createButton("ESP: OFF")
-espBtn.Parent = scroll
-local function clearESP()
-    for _, v in pairs(espObjects) do
-        if v and v.Parent then v:Destroy() end
+        repeat task.wait() until v.Character and v.Character:FindFirstChild("HumanoidRootPart")
+        local vHolder = Holder:FindFirstChild(v.Name)
+        if not vHolder then
+            vHolder = Instance.new("Folder", Holder)
+            vHolder.Name = v.Name
+        end
+        vHolder:ClearAllChildren()
+        local box = BoxTemplate:Clone()
+        box.Name = v.Name.."Box"
+        box.Adornee = v.Character.HumanoidRootPart
+        box.Parent = vHolder
+        box.Visible = true
+        local nameTag = NameTagTemplate:Clone()
+        nameTag.Name = v.Name.."NameTag"
+        nameTag.Enabled = true
+        nameTag.Parent = vHolder
+        nameTag.Adornee = v.Character.Head or v.Character.HumanoidRootPart
+        nameTag.Tag.Text = v.Name
     end
-    espObjects = {}
-end
-local function addESP(p)
-    if p == LocalPlayer then return end
-    local bb = Instance.new("BillboardGui")
-    bb.Size = UDim2.new(0, 200, 0, 50)
-    bb.AlwaysOnTop = true
-    local lbl = Instance.new("TextLabel", bb)
-    lbl.Size = UDim2.new(1,0,1,0)
-    lbl.BackgroundTransparency = 1
-    lbl.TextColor3 = Color3.new(1,1,1)
-    lbl.TextStrokeTransparency = 0
-    lbl.Font = Enum.Font.SourceSansBold
-    lbl.TextScaled = true
-    lbl.Text = p.Name
-    local function update()
-        if p.Character and p.Character:FindFirstChild("Head") and p.Character:FindFirstChild("HumanoidRootPart") then
-            local dist = (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and (p.Character.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude) or 0
-            lbl.Text = string.format("%s (%.0fm)", p.Name, dist)
-            bb.Adornee = p.Character.Head
-            bb.Parent = p.Character.Head
+    
+    local function UnloadCharacter(v)
+        local vHolder = Holder:FindFirstChild(v.Name)
+        if vHolder then
+            vHolder:ClearAllChildren()
+            vHolder:Destroy()
         end
     end
-    update()
-    RunService.RenderStepped:Connect(update)
-    table.insert(espObjects, bb)
-end
-espBtn.MouseButton1Click:Connect(function()
-    espOn = not espOn
-    espBtn.Text = "ESP: " .. (espOn and "ON" or "OFF")
-    clearESP()
-    if espOn then
-        for _, p in pairs(Players:GetPlayers()) do
-            addESP(p)
+
+    for _,v in pairs(Players:GetPlayers()) do
+        if v ~= player then
+            coroutine.wrap(LoadCharacter)(v)
         end
     end
-end)
+
+    Players.PlayerAdded:Connect(function(v)
+        if v ~= player then
+            coroutine.wrap(LoadCharacter)(v)
+        end
+    end)
+    Players.PlayerRemoving:Connect(function(v)
+        UnloadCharacter(v)
+    end)
+end
+
+local function removeESP()
+    local espFolder = game.CoreGui:FindFirstChild("ESP")
+    if espFolder then espFolder:Destroy() end
+end
 
 -- Infinite Jump
 local infJump = false
