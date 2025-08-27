@@ -128,8 +128,43 @@ local layout = Instance.new("UIListLayout", scroll)
 layout.Padding = UDim.new(0, 4)
 layout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- ESP
-repeat task.wait() until v.Character and v.Character:FindFirstChild("HumanoidRootPart")
+-- ESP Setup
+local function setupESP()
+    local existingESP = game.CoreGui:FindFirstChild("ESP")
+    if existingESP then existingESP:Destroy() end
+    local Holder = Instance.new("Folder", game.CoreGui)
+    Holder.Name = "ESP"
+    
+    local BoxTemplate = Instance.new("BoxHandleAdornment")
+    BoxTemplate.Name = "nilBox"
+    BoxTemplate.Size = Vector3.new(1, 2, 1)
+    BoxTemplate.Color3 = Color3.new(1, 0, 0)
+    BoxTemplate.Transparency = 0.7
+    BoxTemplate.ZIndex = 0
+    BoxTemplate.AlwaysOnTop = true
+    BoxTemplate.Visible = false
+    
+    local NameTagTemplate = Instance.new("BillboardGui")
+    NameTagTemplate.Name = "nilNameTag"
+    NameTagTemplate.Enabled = false
+    NameTagTemplate.Size = UDim2.new(0, 200, 0, 50)
+    NameTagTemplate.AlwaysOnTop = true
+    NameTagTemplate.StudsOffset = Vector3.new(0, 1.8, 0)
+    local TagLabel = Instance.new("TextLabel", NameTagTemplate)
+    TagLabel.Name = "Tag"
+    TagLabel.BackgroundTransparency = 1
+    TagLabel.Position = UDim2.new(0, -50, 0, 0)
+    TagLabel.Size = UDim2.new(0, 300, 0, 20)
+    TagLabel.TextSize = 15
+    TagLabel.TextColor3 = Color3.new(1, 0, 0)
+    TagLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+    TagLabel.TextStrokeTransparency = 0.4
+    TagLabel.Text = "nil"
+    TagLabel.Font = Enum.Font.SourceSansBold
+    TagLabel.TextScaled = false
+
+    local function LoadCharacter(v)
+        repeat task.wait() until v.Character and v.Character:FindFirstChild("HumanoidRootPart")
         local vHolder = Holder:FindFirstChild(v.Name)
         if not vHolder then
             vHolder = Instance.new("Folder", Holder)
@@ -177,20 +212,6 @@ local function removeESP()
     local espFolder = game.CoreGui:FindFirstChild("ESP")
     if espFolder then espFolder:Destroy() end
 end
-
--- Infinite Jump
-local infJump = false
-local infJumpBtn = createButton("Infinite Jump: OFF")
-infJumpBtn.Parent = scroll
-infJumpBtn.MouseButton1Click:Connect(function()
-    infJump = not infJump
-    infJumpBtn.Text = "Infinite Jump: " .. (infJump and "ON" or "OFF")
-end)
-UIS.JumpRequest:Connect(function()
-    if infJump and LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-        LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
-    end
-end)
 
 -- Noclip
 local noclip = false
